@@ -8,12 +8,12 @@
 #include "Grabber.generated.h"
 
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class BUILDINGESCAPE_API UGrabber : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:	
+public:
 	// Sets default values for this component's properties
 	UGrabber();
 	// Called every frame
@@ -26,11 +26,13 @@ protected:
 private:
 	FVector MyPosition;
 	FRotator MyRotation;
+	FVector DebugLineEnd;
 	float Reach = 100.0f;
 	UPhysicsHandleComponent* MyPhysicsHandle = nullptr;
 	UInputComponent* MyInputComponent = nullptr;
 	AActor* ActorHit = nullptr;
 	void Grab();
+	FHitResult GetFirstPhysicsActorInReach();
 	void Release();
 	void FindPhysicsHandle();
 	void BindGrabberInputComponent();

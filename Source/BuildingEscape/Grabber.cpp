@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "DrawDebugHelpers.h"
 #include "Grabber.h"
+#include "DrawDebugHelpers.h"
 #define OUT
 // Sets default values for this component's properties
 UGrabber::UGrabber()
@@ -49,26 +49,38 @@ void UGrabber::BindGrabberInputComponent()
 void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
+	if (MyPhysicsHandle->GrabbedComponent)
+	{
+		FHitResult RaycastHit = GetFirstPhysicsActorInReach();
+		MyPhysicsHandle->SetTargetLocation(DebugLineEnd);
+	}
 	// ...
 }
 void UGrabber::Grab()
 {
-	GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(OUT MyPosition, OUT MyRotation);
-	FVector DebugLineEnd = MyPosition + (Reach * MyRotation.Vector());
+	FHitResult RaycastHit = GetFirstPhysicsActorInReach();
+	UPrimitiveComponent* MyPrimitiveComponent = RaycastHit.GetComponent();
+	ActorHit = RaycastHit.GetActor();
+	if (ActorHit)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Grabbed %s"), *ActorHit->GetName());
+		//grab physics handle of the Actor
+		MyPhysicsHandle->GrabComponentAtLocation(MyPrimitiveComponent, NAME_None, DebugLineEnd);
+
+	}
+}
+FHitResult UGrabber::GetFirstPhysicsActorInReach()
+{
 	FHitResult RaycastHit;
+	GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(OUT MyPosition, OUT MyRotation);
+	DebugLineEnd = MyPosition + (Reach * MyRotation.Vector());
 	FCollisionQueryParams QueryParams
 	{
 		FName(TEXT("")), false, GetOwner()
 	};
 	//raycast
 	GetWorld()->LineTraceSingleByObjectType(OUT RaycastHit, MyPosition, DebugLineEnd, ECC_PhysicsBody, QueryParams);
-	ActorHit = RaycastHit.GetActor();
-	if (ActorHit)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Grabbed %s"), *ActorHit->GetName());
-		//grab physics handle of the Actor
-	}
+	return RaycastHit;
 }
 void UGrabber::Release()
 {
@@ -76,5 +88,6 @@ void UGrabber::Release()
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Released %s"), *ActorHit->GetName());
 		//release physics handle of the Actor
+		MyPhysicsHandle->ReleaseComponent();
 	}
 }
