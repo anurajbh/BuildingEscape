@@ -24,16 +24,16 @@ protected:
 	virtual void BeginPlay() override;
 
 private:
-	FVector MyPosition;
-	FRotator MyRotation;
-	FVector DebugLineEnd;
 	float Reach = 100.0f;
 	UPhysicsHandleComponent* MyPhysicsHandle = nullptr;
 	UInputComponent* MyInputComponent = nullptr;
 	AActor* ActorHit = nullptr;
+	FVector MyPosition;
+	FRotator MyRotation;
 	void Grab();
 	FHitResult GetFirstPhysicsActorInReach();
 	void Release();
 	void FindPhysicsHandle();
 	void BindGrabberInputComponent();
+	FVector GetPlayerReachVector();
 };
