@@ -25,8 +25,10 @@ protected:
 
 private:
 	float Reach = 100.0f;
-	UPhysicsHandleComponent* MyPhysicsHandle = nullptr;
-	UInputComponent* MyInputComponent = nullptr;
+	UPROPERTY()
+		UPhysicsHandleComponent* MyPhysicsHandle = nullptr;
+	UPROPERTY()
+		UInputComponent* MyInputComponent = nullptr;
 	AActor* ActorHit = nullptr;
 	FVector MyPosition;
 	FRotator MyRotation;

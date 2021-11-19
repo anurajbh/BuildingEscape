@@ -6,15 +6,16 @@
 #include "Components/ActorComponent.h"
 #include <Runtime\Engine\Classes\Engine\TriggerVolume.h>
 #include "Actor.h"
+#include "Components/AudioComponent.h"
 #include "OpenDoor.generated.h"
 
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class BUILDINGESCAPE_API UOpenDoor : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:	
+public:
 	// Sets default values for this component's properties
 	UOpenDoor();
 
@@ -22,27 +23,38 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-public:	
+	void PressurePlateLog();
+
+public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	void ChangeDoor(float TargetYaw, float DeltaTime, float DoorSpeed);
+	void OpenTheDoor(float DeltaTime);
+
+	void CloseTheDoor(float DeltaTime);
+
+	void FindAudioComponent();
 
 	float GetTotalMass() const;
 private:
 	UPROPERTY(EditAnywhere)
-	float FinalYaw = 90.0f;
+		float FinalYaw = 90.0f;
 	UPROPERTY(EditAnywhere)
-	float StartingYaw = 0.0f;
+		float StartingYaw = 0.0f;
 	UPROPERTY(EditAnywhere)
-	ATriggerVolume* PressurePlate;
+		ATriggerVolume* PressurePlate = nullptr;
 	float DoorLastOpened = 0.0f;
 	UPROPERTY(EditAnywhere)
-	float DoorCloseDelay = 0.5f;
+		float DoorCloseDelay = 0.5f;
 	UPROPERTY(EditAnywhere)
-	float DoorOpenSpeed = 1.0f;
+		float DoorOpenSpeed = 1.0f;
 	UPROPERTY(EditAnywhere)
-	float DoorCloseSpeed = 2.0f;
+		float DoorCloseSpeed = 2.0f;
 	UPROPERTY(EditAnywhere)
-	float MassThatOpens = 50.f;
+		float MassThatOpens = 50.f;
+	UPROPERTY()
+		UAudioComponent* MyAudioComponent = nullptr;
+	//tracks if sound has been played
+	bool DoorOpenSound = false;
+	bool DoorCloseSound = true;
 };

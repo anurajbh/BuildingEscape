@@ -43,6 +43,10 @@ void UGrabber::BindGrabberInputComponent()
 void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	if (!MyPhysicsHandle)
+	{
+		return;
+	}
 	//check if component grabbed
 	if (MyPhysicsHandle->GrabbedComponent)
 	{
@@ -53,6 +57,10 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 }
 void UGrabber::Grab()
 {
+	if (!MyPhysicsHandle)
+	{
+		return;
+	}
 	FHitResult RaycastHit = GetFirstPhysicsActorInReach();
 	UPrimitiveComponent* MyPrimitiveComponent = RaycastHit.GetComponent();
 	ActorHit = RaycastHit.GetActor();
@@ -79,6 +87,10 @@ FHitResult UGrabber::GetFirstPhysicsActorInReach()
 }
 void UGrabber::Release()
 {
+	if (!MyPhysicsHandle)
+	{
+		return;
+	}
 	//null check
 	if (ActorHit)
 	{
